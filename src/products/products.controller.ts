@@ -17,7 +17,7 @@ import { extname } from 'path';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Express } from 'express'; 
+import { Express } from 'express';
 
 @Controller('products')
 export class ProductsController {
@@ -38,7 +38,7 @@ export class ProductsController {
   )
   async createProduct(
     @Body() createProductDto: CreateProductDto,
-    @UploadedFile() file?: Express.Multer.File
+    @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.productsService.createProduct(createProductDto, file);
   }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from '@nestjs/class-validator'
+import { IsNotEmpty, IsOptional, IsString } from '@nestjs/class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()

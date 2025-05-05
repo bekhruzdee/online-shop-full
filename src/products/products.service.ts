@@ -87,7 +87,7 @@ export class ProductsService {
   }
 
   async deleteProduct(id: number) {
-    await this.getProductById(id); 
+    await this.getProductById(id);
     await this.productRepository.delete(id);
     return {
       success: true,
