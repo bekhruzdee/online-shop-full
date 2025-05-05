@@ -1,4 +1,3 @@
-
 import {
   Column,
   CreateDateColumn,
@@ -20,10 +19,6 @@ export class User {
   password: string;
   @Column({ type: 'varchar', default: 'client' })
   role: string;
-//   @OneToMany(() => Cart, (cart) => cart.user)
-//   cart: Cart[];
-//   @OneToMany(() => Order, (order) => order.user)
-//   orders: Order[];
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
