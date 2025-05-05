@@ -87,7 +87,7 @@ export class ProductsService {
   }
 
   async deleteProduct(id: number) {
-    await this.getProductById(id); // bu avtomatik 404 qaytaradi yo'q bo'lsa
+    await this.getProductById(id); 
     await this.productRepository.delete(id);
     return {
       success: true,
