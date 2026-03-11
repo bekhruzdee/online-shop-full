@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateAdminDto } from './dto/create-admin.dto';
+// import { CreateAdminDto } from './dto/create-admin.dto';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/roles/entities/role.entity';
 import { RoleName } from 'src/common/enums/role.enum';
@@ -16,42 +16,6 @@ export class UsersService {
     @InjectRepository(Role)
     private roleRepository: Repository<Role>,
   ) {}
-
-  async createAdmin(
-    createAdminDto: CreateAdminDto,
-  ): Promise<{ success: boolean; message: string; data?: User }> {
-    const existingUser = await this.usersRepository.findOne({
-      where: { email: createAdminDto.email },
-    });
-
-    if (existingUser) {
-      return {
-        success: false,
-        message: 'User already exists',
-      };
-    }
-
-    const hashedPassword = await bcrypt.hash(createAdminDto.password, 10);
-
-    const adminRole = await this.roleRepository.findOne({
-      where: { name: RoleName.ADMIN },
-    });
-
-    const newAdmin = this.usersRepository.create({
-      username: createAdminDto.username,
-      email: createAdminDto.email,
-      password: hashedPassword,
-      roles: adminRole ? [adminRole] : [],
-    });
-
-    const savedAdmin = await this.usersRepository.save(newAdmin);
-
-    return {
-      success: true,
-      message: 'Admin created successfully✅',
-      data: savedAdmin,
-    };
-  }
 
   async getAllAdmins(): Promise<{
     success: boolean;

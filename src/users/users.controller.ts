@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateAdminDto } from './dto/create-admin.dto';
+// import { CreateAdminDto } from './dto/create-admin.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
@@ -23,13 +23,6 @@ import { Permission } from 'src/common/enums/permission.enum';
 @UseGuards(AuthGuard, RolesGuard, PermissionsGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post('create-admin')
-  @Roles(RoleName.SUPER_ADMIN)
-  @Permissions(Permission.ROLES_MANAGE)
-  createAdmin(@Body() createAdminDto: CreateAdminDto) {
-    return this.usersService.createAdmin(createAdminDto);
-  }
 
   @Get('admins')
   @Roles(RoleName.SUPER_ADMIN, RoleName.ADMIN)
