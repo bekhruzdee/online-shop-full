@@ -5,8 +5,14 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
 import { ProductsModule } from './products/products.module';
+import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { User } from './users/entities/user.entity';
+import { Product } from './products/entities/product.entity';
+import { Role } from './roles/entities/role.entity';
+import { PermissionEntity } from './permissions/entities/permission.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -17,13 +23,15 @@ import { ProductsModule } from './products/products.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User],
-      synchronize: true,
+      entities: [User, Product, Role, PermissionEntity],
+      synchronize: false,
       // logging: true,
     }),
     AuthModule,
     UserModule,
     ProductsModule,
+    RolesModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

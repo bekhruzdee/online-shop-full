@@ -6,6 +6,7 @@ import { Product } from './entities/product.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { extname } from 'path';
         },
       }),
     }),
+    AuthModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

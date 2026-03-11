@@ -32,9 +32,10 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { iat, exp, ...userData } = payload;
-      request['user'] = userData;
-    } catch (error) {
+      request['user'] = userData; // { id, username, roles: string[], permissions: string[] }
+    } catch {
       throw new UnauthorizedException('Invalid token or token expired');
     }
 

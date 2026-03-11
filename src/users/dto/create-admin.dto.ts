@@ -3,7 +3,6 @@ import {
   IsString,
   IsEmail,
   MinLength,
-  IsIn,
 } from '@nestjs/class-validator';
 
 export class CreateAdminDto {
@@ -20,9 +19,4 @@ export class CreateAdminDto {
   @IsString()
   @MinLength(6)
   password: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(['admin'])
-  role: string;
 }

@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -18,12 +19,22 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Express } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { PermissionsGuard } from 'src/common/guards/permissions.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Permissions } from 'src/common/decorators/permissions.decorator';
+import { RoleName } from 'src/common/enums/role.enum';
+import { Permission } from 'src/common/enums/permission.enum';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post('create')
+  @UseGuards(AuthGuard, RolesGuard, PermissionsGuard)
+  @Roles(RoleName.SUPER_ADMIN, RoleName.ADMIN, RoleName.MODERATOR)
+  @Permissions(Permission.PRODUCTS_CREATE)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -59,6 +70,9 @@ export class ProductsController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard, RolesGuard, PermissionsGuard)
+  @Roles(RoleName.SUPER_ADMIN, RoleName.ADMIN, RoleName.MODERATOR)
+  @Permissions(Permission.PRODUCTS_UPDATE)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -80,6 +94,9 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard, RolesGuard, PermissionsGuard)
+  @Roles(RoleName.SUPER_ADMIN, RoleName.ADMIN)
+  @Permissions(Permission.PRODUCTS_DELETE)
   async deleteProduct(@Param('id') id: number) {
     return this.productsService.deleteProduct(+id);
   }

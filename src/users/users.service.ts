@@ -5,12 +5,16 @@ import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from 'src/roles/entities/role.entity';
+import { RoleName } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
   ) {}
 
   async createAdmin(
@@ -29,9 +33,15 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(createAdminDto.password, 10);
 
+    const adminRole = await this.roleRepository.findOne({
+      where: { name: RoleName.ADMIN },
+    });
+
     const newAdmin = this.usersRepository.create({
-      ...createAdminDto,
+      username: createAdminDto.username,
+      email: createAdminDto.email,
       password: hashedPassword,
+      roles: adminRole ? [adminRole] : [],
     });
 
     const savedAdmin = await this.usersRepository.save(newAdmin);
@@ -48,9 +58,12 @@ export class UsersService {
     message: string;
     data: User[];
   }> {
-    const admins = await this.usersRepository.find({
-      where: { role: 'admin' },
-    });
+    const admins = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'role')
+      .leftJoinAndSelect('role.permissions', 'permission')
+      .where('role.name = :roleName', { roleName: RoleName.ADMIN })
+      .getMany();
 
     if (!admins.length) {
       return {
@@ -73,26 +86,28 @@ export class UsersService {
     data: Omit<User, 'password'>[];
   }> {
     const users = await this.usersRepository.find({
-      select: ['id', 'username', 'email', 'role', 'created_at', 'updated_at'],
+      relations: ['roles', 'roles.permissions'],
     });
+    const data = users.map(({ password, ...rest }) => rest);
     return {
       success: true,
       message: 'Users data retrieved successfully',
-      data: users,
+      data: data as Omit<User, 'password'>[],
     };
   }
 
   async findOne(id: number): Promise<Omit<User, 'password'>> {
     const user = await this.usersRepository.findOne({
       where: { id },
-      select: ['id', 'username', 'email', 'role', 'created_at', 'updated_at'],
+      relations: ['roles', 'roles.permissions'],
     });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    return user;
+    const { password, ...rest } = user;
+    return rest as Omit<User, 'password'>;
   }
 
   async update(
