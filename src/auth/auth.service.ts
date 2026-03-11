@@ -1,5 +1,3 @@
-// src/auth/auth.service.ts
-
 import {
   ConflictException,
   Injectable,
@@ -35,16 +33,15 @@ export class AuthService {
       throw new ConflictException('Username or Email already exists.');
     }
 
-    // Assign default 'client' role on registration
-    const clientRole = await this.roleRepository.findOne({
-      where: { name: RoleName.CLIENT },
+    const userRole = await this.roleRepository.findOne({
+      where: { name: RoleName.USER },
     });
 
     const user = this.userRepository.create();
     user.username = createAuthDto.username;
     user.password = await bcrypt.hash(createAuthDto.password, 10);
     user.email = createAuthDto.email;
-    user.roles = clientRole ? [clientRole] : [];
+    user.roles = userRole ? [userRole] : [];
 
     await this.userRepository.save(user);
     return 'You are registered✅';

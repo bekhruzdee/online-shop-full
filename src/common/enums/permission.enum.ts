@@ -31,5 +31,5 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, Permission[]> = {
     Permission.PRODUCTS_UPDATE,
     Permission.USERS_READ,
   ],
-  client: [Permission.PRODUCTS_READ],
+  user: [Permission.PRODUCTS_READ],
 };
