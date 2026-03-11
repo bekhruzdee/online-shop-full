@@ -1,4 +1,9 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString } from '@nestjs/class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from '@nestjs/class-validator';
 
 export class AssignRolesToUserDto {
   @IsNotEmpty()

@@ -1,4 +1,9 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from '@nestjs/class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from '@nestjs/class-validator';
 import { RoleName } from 'src/common/enums/role.enum';
 
 export class CreateRoleDto {

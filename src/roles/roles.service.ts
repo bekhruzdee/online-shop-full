@@ -40,9 +40,15 @@ export class RolesService {
   }
 
   async create(dto: CreateRoleDto): Promise<Role> {
-    const exists = await this.roleRepository.findOne({ where: { name: dto.name } });
-    if (exists) throw new ConflictException(`Role '${dto.name}' already exists`);
-    const role = this.roleRepository.create({ name: dto.name, description: dto.description });
+    const exists = await this.roleRepository.findOne({
+      where: { name: dto.name },
+    });
+    if (exists)
+      throw new ConflictException(`Role '${dto.name}' already exists`);
+    const role = this.roleRepository.create({
+      name: dto.name,
+      description: dto.description,
+    });
     return this.roleRepository.save(role);
   }
 
@@ -66,7 +72,9 @@ export class RolesService {
     if (permissions.length !== dto.permissions.length) {
       const found = permissions.map((p) => p.name as Permission);
       const missing = dto.permissions.filter((p) => !found.includes(p));
-      throw new NotFoundException(`Permissions not found: ${missing.join(', ')}`);
+      throw new NotFoundException(
+        `Permissions not found: ${missing.join(', ')}`,
+      );
     }
 
     role.permissions = permissions;

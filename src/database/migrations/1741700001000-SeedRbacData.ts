@@ -81,7 +81,12 @@ export class SeedRbacData1741700001000 implements MigrationInterface {
       'users:update',
       'users:delete',
     ],
-    moderator: ['products:create', 'products:read', 'products:update', 'users:read'],
+    moderator: [
+      'products:create',
+      'products:read',
+      'products:update',
+      'users:read',
+    ],
     client: ['products:read'],
   };
 
@@ -191,7 +196,10 @@ export class SeedRbacData1741700001000 implements MigrationInterface {
           role,
           permission,
         ]);
-        const pairValues = this.buildValuesPlaceholders(rolePermissionPairs.length, 2);
+        const pairValues = this.buildValuesPlaceholders(
+          rolePermissionPairs.length,
+          2,
+        );
 
         await queryRunner.query(
           `
@@ -231,7 +239,10 @@ export class SeedRbacData1741700001000 implements MigrationInterface {
           role,
           permission,
         ]);
-        const pairValues = this.buildValuesPlaceholders(rolePermissionPairs.length, 2);
+        const pairValues = this.buildValuesPlaceholders(
+          rolePermissionPairs.length,
+          2,
+        );
 
         await queryRunner.query(
           `
@@ -246,10 +257,9 @@ export class SeedRbacData1741700001000 implements MigrationInterface {
         );
       }
 
-      await queryRunner.query(
-        `DELETE FROM "roles" WHERE "name" = ANY($1)`,
-        [this.roles.map((r) => r.name)],
-      );
+      await queryRunner.query(`DELETE FROM "roles" WHERE "name" = ANY($1)`, [
+        this.roles.map((r) => r.name),
+      ]);
 
       await queryRunner.query(
         `DELETE FROM "permissions" WHERE "name" = ANY($1)`,
