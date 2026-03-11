@@ -93,8 +93,12 @@ export class InitSchema1741700000000 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX IF EXISTS "IDX_user_roles_user_id";`);
     await queryRunner.query(`DROP TABLE IF EXISTS "user_roles";`);
 
-    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_role_permissions_permission_id";`);
-    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_role_permissions_role_id";`);
+    await queryRunner.query(
+      `DROP INDEX IF EXISTS "IDX_role_permissions_permission_id";`,
+    );
+    await queryRunner.query(
+      `DROP INDEX IF EXISTS "IDX_role_permissions_role_id";`,
+    );
     await queryRunner.query(`DROP TABLE IF EXISTS "role_permissions";`);
 
     await queryRunner.query(`DROP TABLE IF EXISTS "products";`);
